@@ -2,6 +2,7 @@ const state = {
   breweries: [],
   filter: "",
   filteredBreweries: [],
+  cityBreweries: [],
 };
 
 const breweryLiEl = document.querySelector("#breweries-list");
@@ -16,6 +17,7 @@ const h1 = document.querySelector("h1");
 h1.hidden = true;
 const article = document.querySelector("article");
 article.hidden = true;
+const asideDiv = document.querySelector(".aside-div");
 
 function fetchBreweries() {
   formEl.addEventListener("submit", function (e) {
@@ -31,7 +33,10 @@ function fetchBreweries() {
   });
 
   searchInputEl.addEventListener("input", function (e) {
-    state.filteredBreweries = state.breweries.filter((brewery) => brewery.name.includes(searchInputEl.value))
+    searchInputEl.value.toUpperCase() === searchInputEl.value.toLowerCase();
+    state.filteredBreweries = state.breweries.filter((brewery) =>
+      brewery.name.includes(searchInputEl.value)
+    );
     render();
   });
 }
@@ -52,7 +57,7 @@ function fetchAPI() {
 
 function renderBreweries() {
   for (const brewery of state.breweries) {
-    checkTypeAndRender(brewery)
+    checkTypeAndRender(brewery);
   }
 }
 
@@ -84,14 +89,14 @@ function checkTypeAndRender(brewery) {
 }
 
 function renderFilteredBreweries() {
-  
   for (const brewery of state.filteredBreweries) {
-    checkTypeAndRender(brewery)
+    checkTypeAndRender(brewery);
   }
 }
 
 function clear() {
   breweryLiEl.innerHTML = "";
+  asideDiv.innerHTML = "";
 }
 
 function show() {
@@ -104,10 +109,55 @@ function render() {
   clear();
   show();
   if (!searchInputEl.value) {
-  renderBreweries();
+    renderBreweries();
+    renderFilterCityBar();
+  } else {
+    renderFilteredBreweries();
   }
-  else {
-    renderFilteredBreweries()
+}
+
+function renderFilterCityBar() {
+  state.breweries.sort((a, b) => a.city.localeCompare(b.city));
+
+  const div = document.createElement("div");
+  const form = document.createElement("form");
+
+  div.setAttribute("class", "filter-by-city-heading");
+
+  const h3 = document.createElement("h3");
+  h3.innerText = "Cities";
+
+  const button = document.createElement("button");
+  button.innerText = "clear all";
+  button.setAttribute("class", "clear-all-btn");
+
+  form.setAttribute("id", "filter-by-city-form");
+
+  for (let i = 0; i < state.breweries.length - 1; i++) {
+    const brewery = state.breweries[i];
+    if (brewery.city !== state.breweries[i + 1].city) {
+      const input = document.createElement("input");
+      const label = document.createElement("label");
+      label.innerText = brewery.city;
+      input.setAttribute("type", "checkbox");
+      input.setAttribute("name", brewery.city);
+      input.setAttribute("value", brewery.city);
+      label.setAttribute("for", brewery.city);
+      input.addEventListener("change", function(){
+        if(this.checked) {
+          //update state
+          state.cityBreweries = state.breweries.filter((brewery) =>
+          brewery.city.includes(state.breweries[i].city)
+    );
+          console.log(state.breweries)
+          //render dom
+          // render()
+        }
+      })
+      form.append(input, label);
+      div.append(h3, button);
+      asideDiv.append(div, form);
+    }
   }
 }
 
