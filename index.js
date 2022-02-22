@@ -2,7 +2,7 @@ const state = {
   breweries: [],
   filter: "",
   filteredBreweries: [],
-  cityBreweries: [],
+  visitList: [],
 };
 
 const breweryLiEl = document.querySelector("#breweries-list");
@@ -82,12 +82,68 @@ function checkTypeAndRender(brewery) {
   </section>
   <section class="link">
     <a href="${brewery.website_url}" target="_blank">Visit Website</a>
-  </section>`;
+  </section>`
+    const addToJsonDiv = document.createElement("div")
+    const removeFromJsonButton = document.createElement("button");
+    removeFromJsonButton.hidden = true;
+    removeFromJsonButton.innerText = 'Remove from visit list'
+    let jsonID = ''
+    removeFromJsonButton.addEventListener("click", function() {
+      removeFromJsonButton.hidden = true;
+      const options = {
+        method: 'DELETE', 
 
+      }
+      fetch(`http://localhost:3000/breweries/${jsonID}`, options)
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+      })
+    })
+    const addToJsonButton = document.createElement("button");
+    addToJsonButton.innerText = 'Add to visit list'
+    addToJsonButton.addEventListener("click", function() {
+      removeFromJsonButton.hidden = false;
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: brewery.name,
+          type: brewery.type,
+          street: brewery.street,
+          postal_code: brewery.postal_code,
+          phone: brewery.phone,
+          city: brewery.city,
+          website_url: brewery.website_url
+        })
+      }
+    fetch("http://localhost:3000/breweries", options)
+    .then(function(response) {
+      return response.json()
+    }).then(function(json) {
+      jsonID = json.id
+    })
+    })
+    addToJsonDiv.append(addToJsonButton, removeFromJsonButton)
+    li.append(addToJsonDiv)
     breweryLiEl.append(li);
   }
 }
-
+function fetchVisitList() {
+  fetch("http://localhost:3000/breweries")
+  .then(function(response) {
+    return response.json()
+  }).then(function(breweries) {
+    state.visitList = breweries
+  })
+}
+function renderVisitList() {
+  for (const brewery of state.visitList) {
+    checkTypeAndRender(brewery);
+  }
+}
 function renderFilteredBreweries() {
   for (const brewery of state.filteredBreweries) {
     checkTypeAndRender(brewery);
@@ -109,56 +165,23 @@ function render() {
   clear();
   show();
   if (!searchInputEl.value) {
-    renderBreweries();
-    renderFilterCityBar();
-  } else {
+    renderBreweries()
+  }
+  else {
     renderFilteredBreweries();
   }
 }
 
-function renderFilterCityBar() {
-  state.breweries.sort((a, b) => a.city.localeCompare(b.city));
-
-  const div = document.createElement("div");
-  const form = document.createElement("form");
-
-  div.setAttribute("class", "filter-by-city-heading");
-
-  const h3 = document.createElement("h3");
-  h3.innerText = "Cities";
-
-  const button = document.createElement("button");
-  button.innerText = "clear all";
-  button.setAttribute("class", "clear-all-btn");
-
-  form.setAttribute("id", "filter-by-city-form");
-
-  for (let i = 0; i < state.breweries.length - 1; i++) {
-    const brewery = state.breweries[i];
-    if (brewery.city !== state.breweries[i + 1].city) {
-      const input = document.createElement("input");
-      const label = document.createElement("label");
-      label.innerText = brewery.city;
-      input.setAttribute("type", "checkbox");
-      input.setAttribute("name", brewery.city);
-      input.setAttribute("value", brewery.city);
-      label.setAttribute("for", brewery.city);
-      input.addEventListener("change", function(){
-        if(this.checked) {
-          //update state
-          state.cityBreweries = state.breweries.filter((brewery) =>
-          brewery.city.includes(state.breweries[i].city)
-    );
-          console.log(state.breweries)
-          //render dom
-          // render()
-        }
-      })
-      form.append(input, label);
-      div.append(h3, button);
-      asideDiv.append(div, form);
-    }
-  }
+function listenToVisitList() {
+  const visitListButton = document.querySelector("#visit-list")
+  visitListButton.addEventListener("click", function(){
+    clear()
+    fetchVisitList()
+    renderVisitList()
+    console.log(state.visitList)
+    
+  })
 }
 
 fetchBreweries();
+listenToVisitList()

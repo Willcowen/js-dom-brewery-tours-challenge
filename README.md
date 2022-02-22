@@ -55,3 +55,28 @@ Use the `index.html` file as a starting point. The `templates` folder provides H
 - Write your `fetch` request to load the data based on the users search. Use `console.log` with the response to make sure you understand the returned data structure.
 - Remember to filter out breweries that are not of type `micro`, `regional` or `brewpub`.
 - Implement the required functionality using the state pattern. User input updates the state, when the state is updated render the page.
+
+
+### Extension 4
+
+Using json-server, add functionality to your page so the user can maintain a list of breweries they want to visit.
+
+- For each brewery in the search results list, add a "Add to visit list" button.
+When the button is clicked, a POST request should be made to your json-server to store that brewery in a list of breweries the user wants to visit.
+- For breweries that are already in that list, add a "Remove from visit list" button that when clicked should make a DELETE request to json-server to remove the brewery from the list.
+- Add a link to the page that displays the list of breweries stored in the to visit list. You can decide where and how you want to display this - either alongside search results, or in a new section and allow the user to switch between the search functionality and the visit list.
+- When the page is reloaded, the list of breweries to visit should be loaded from json-server.
+
+For this extension, you will have to consider:
+
+- How are you going to store the list of breweries to visit in json-server? What information will you need to capture?:
+- When rendering the list of breweries from search results, how can you tell if the brewery is already in the list of breweries to visit?
+
+For this extension, if you are using the Live Server plugin, you must also remember to exclude the db.json file of json-server from triggering a page reload. You can do this by creating a folder called .vscode at the root of your project. In there, you need to add a settings.json file with the below contents:
+
+{
+  "liveServer.settings.ignoreFiles": [
+    "**/*.json"
+  ]
+}
+Once this is done, you should also restart VS Code.

@@ -1,0 +1,49 @@
+{
+  "breweries": [
+    {
+      "name": "13 Below Brewery",
+      "street": "7391 Forbes Rd",
+      "postal_code": "45233-1013",
+      "phone": "5139750613",
+      "city": "Cincinnati",
+      "website_url": "http://www.13belowbrewery.com",
+      "id": 1
+    },
+    {
+      "name": "13 Below Brewery",
+      "street": "7391 Forbes Rd",
+      "postal_code": "45233-1013",
+      "phone": "5139750613",
+      "city": "Cincinnati",
+      "website_url": "http://www.13belowbrewery.com",
+      "id": 2
+    },
+    {
+      "name": "16 Lots Brewing",
+      "street": "753 Reading Rd",
+      "postal_code": "45040-1303",
+      "phone": "5134863672",
+      "city": "Mason",
+      "website_url": "http://www.16lots.com",
+      "id": 3
+    },
+    {
+      "name": "2 Tones Brewing Co.",
+      "street": "4539 E Broad St",
+      "postal_code": "43213-1308",
+      "phone": null,
+      "city": "Whitehall",
+      "website_url": "http://www.2tonesbrewingco.com",
+      "id": 4
+    },
+    {
+      "name": "4kd Crick Brewery",
+      "street": "211 Carpenter Rd",
+      "postal_code": "43512-1718",
+      "phone": "4199562863",
+      "city": "Defiance",
+      "website_url": "http://Www.4kdcrickbrewery.com",
+      "id": 5
+    }
+  ]
+}
